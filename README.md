@@ -6,7 +6,7 @@ Mapping my previous cloud experience with Azure to Amazon Web Services - terms w
 
 ## Goals
 
-- [ ] Install Docker Desktop to run local Jenkins container
+- [x] Install Docker Desktop to run local Jenkins container
 - [ ] Create custom Jenkins Docker Agent image with all necessary tools for this pipeline
   - [ ] aws cli
   - [ ] terraform
