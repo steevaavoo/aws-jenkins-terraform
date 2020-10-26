@@ -19,6 +19,8 @@ Mapping my previous cloud experience with Azure to Amazon Web Services - terms w
 
 ## Getting Started
 
+### Setting up Jenkins
+
 1. Start Docker Desktop
 1. Start Jenkins Docker Container
 
@@ -52,3 +54,40 @@ Mapping my previous cloud experience with Azure to Amazon Web Services - terms w
    1. CloudBees AWS Credentials
    1. PowerShell
 1. Download now and install after restart
+
+### Building the Docker Agent (iteratively)
+
+1. Create an 'agent' folder and add a Dockerfile
+1. Assemble Dockerfile
+
+    ```Dockerfile
+    FROM mcr.microsoft.com/powershell:7.0.3-ubuntu-18.04
+
+    ENV DOCKER_VERSION=19.03.13
+
+    RUN VERSION="${DOCKER_VERSION}" && \
+    curl -fsSL https://get.docker.com -o get-docker.sh && \
+    sh get-docker.sh
+    ```
+
+1. Navigate to agent folder and build container
+
+    ```powershell
+    Push-Location .\agent
+    $dockerUser = "steevaavoo"
+    $tag = (Get-Date -Format "yyyy-MM-dd")
+    $dockerImage = "$dockerUser/pwshjenkinsagent"
+    $dockerImageAndTag = "$($dockerImage):$tag"
+    $dockerImageAndLatestTag = "$($dockerImage):latest"
+    docker build . -t $dockerImageAndTag
+    docker tag $dockerImageAndTag $dockerImageAndLatestTag
+    ```
+1. Check install of Docker Engine succeeded - if you get a version list, it worked
+
+    ```powershell
+    docker run -it $dockerImageAndTag bash
+    ```
+
+    ```bash
+    docker version
+    ```
