@@ -19,3 +19,7 @@ ENV DOCKER_VERSION=19.03.13
 RUN VERSION="${DOCKER_VERSION}" && \
     curl -fsSL https://get.docker.com -o get-docker.sh && \
     sh get-docker.sh
+
+# When called via Jenkinsfile, make sure to pass the argument below to allow the agent (Docker-in-Docker) to
+# interact with the Docker daemon on the host Docker container.
+# args  '-v /var/run/docker.sock:/var/run/docker.sock'

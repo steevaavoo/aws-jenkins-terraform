@@ -10,10 +10,10 @@ Mapping my previous cloud experience with Azure to Amazon Web Services - terms w
 - [ ] Create custom Jenkins Docker Agent image with all necessary tools for this pipeline
   - [ ] aws cli
   - [ ] terraform
-  - [ ] docker cli
+  - [x] docker cli
   - [ ] kubectl
   - [ ] helm
-  - [ ] pwsh
+  - [x] pwsh
 - [ ] Create custom node.js "Hello World" Docker container and upload to AWS "container registry"
 - [ ] Deploy custom container in K8s
 
@@ -81,7 +81,11 @@ Mapping my previous cloud experience with Azure to Amazon Web Services - terms w
     $dockerImageAndLatestTag = "$($dockerImage):latest"
     docker build . -t $dockerImageAndTag
     docker tag $dockerImageAndTag $dockerImageAndLatestTag
+    # Fix the "Cannot connect to the Docker daemon" error caused by running Docker-in-Docker - when calling the
+    # agent, make sure to pass this as an argument.
+    docker run -it -v /var/run/docker.sock:/var/run/docker.sock $dockerImageAndTag bash
     ```
+
 1. Check install of Docker Engine succeeded - if you get a version list, it worked
 
     ```powershell
@@ -91,3 +95,8 @@ Mapping my previous cloud experience with Azure to Amazon Web Services - terms w
     ```bash
     docker version
     ```
+
+To Do and Note:
+
+- [ ] Add remaining plug-ins
+- [ ] Push to container registry
