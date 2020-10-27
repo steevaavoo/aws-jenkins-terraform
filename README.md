@@ -8,7 +8,7 @@ Mapping my previous cloud experience with Azure to Amazon Web Services - terms w
 
 - [x] Install Docker Desktop to run local Jenkins container
 - [ ] Create custom Jenkins Docker Agent image with all necessary tools for this pipeline
-  - [ ] aws cli
+  - [x] aws cli
   - [ ] terraform
   - [x] docker cli
   - [ ] kubectl
@@ -55,10 +55,15 @@ Mapping my previous cloud experience with Azure to Amazon Web Services - terms w
    1. PowerShell
 1. Download now and install after restart
 
-### Building the Docker Agent (iteratively)
+### Building the Docker Agent
+
+Built iteratively, by connecting to bash in the Docker container and running the commands interactively.
+Source URLs included in Dockerfile in each case.
 
 1. Create an 'agent' folder and add a Dockerfile
 1. Assemble Dockerfile
+   1. Based on MS Powershell/Ubuntu Image, so PowerShell is integrated
+   1. Add Docker Engine "convenience script"
 
     ```Dockerfile
     FROM mcr.microsoft.com/powershell:7.0.3-ubuntu-18.04
@@ -95,6 +100,32 @@ Mapping my previous cloud experience with Azure to Amazon Web Services - terms w
     ```bash
     docker version
     ```
+
+1. Install AWS CLI (adding the below to Dockerfile)
+   1. First I needed to install the Unzip utility using apt-get (which needed updating first)
+
+        ```bash
+        RUN apt-get update
+        RUN apt-get install unzip
+        ```
+
+   1. Next, I added the AWS CLI install script
+
+        ```bash
+        RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+        unzip awscliv2.zip && \
+        ./aws/install
+        ```
+
+   1. Tested functionality by connecting to Bash shell in container and running:
+
+        ```bash
+        aws --version
+        aws configure
+        # provided my key and secret here to test connection to my account
+        aws sts get-caller-identity
+        # if UserID, Account and Arn are returned, AWS CLI connection is working
+        ```
 
 To Do and Note:
 
