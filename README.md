@@ -9,7 +9,7 @@ Mapping my previous cloud experience with Azure to Amazon Web Services - terms w
 - [x] Install Docker Desktop to run local Jenkins container
 - [ ] Create custom Jenkins Docker Agent image with all necessary tools for this pipeline
   - [x] aws cli
-  - [ ] terraform
+  - [x] terraform
   - [x] docker cli
   - [ ] kubectl
   - [ ] helm
@@ -68,9 +68,12 @@ Source URLs included in Dockerfile in each case.
     ```Dockerfile
     FROM mcr.microsoft.com/powershell:7.0.3-ubuntu-18.04
 
+    # (all version control here)
     ENV DOCKER_VERSION=19.03.13
+    ENV AWSCLI_VERSION=2.0.59
+    ENV TF_VERSION=0.13.5
 
-    RUN VERSION="${DOCKER_VERSION}" && \
+    RUN VERSION=${DOCKER_VERSION} && \
     curl -fsSL https://get.docker.com -o get-docker.sh && \
     sh get-docker.sh
     ```
@@ -112,7 +115,7 @@ Source URLs included in Dockerfile in each case.
    1. Next, I added the AWS CLI install script
 
         ```bash
-        RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+        RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWSCLI_VERSION}.zip" -o "awscliv2.zip" && \
         unzip awscliv2.zip && \
         ./aws/install
         ```
@@ -127,7 +130,17 @@ Source URLs included in Dockerfile in each case.
         # if UserID, Account and Arn are returned, AWS CLI connection is working
         ```
 
+   1. Added the Terraform install script:
+
+        ```bash
+        RUN curl https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip -o terraform.zip && \
+        unzip terraform.zip && \
+        mv terraform /usr/bin && \
+        rm terraform.zip
+        ```
+
 To Do and Note:
 
+- [ ] Tidy up AWSCLI installation output (/dev/null?)
 - [ ] Add remaining plug-ins
 - [ ] Push to container registry

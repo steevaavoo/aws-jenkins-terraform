@@ -9,24 +9,27 @@ FROM mcr.microsoft.com/powershell:7.0.3-ubuntu-18.04
 # Docker versions list:
 # https://docs.docker.com/engine/release-notes/
 ENV DOCKER_VERSION=19.03.13
+
 # AWS CLI versions list
 # https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst
 ENV AWSCLI_VERSION=2.0.59
 
-# Updating apt-get with available packages
-RUN apt-get update
+# Terraform Versions list
+# Lastest build https://releases.hashicorp.com/terraform/0.13.5/terraform_0.13.5_linux_amd64.zip
+# https://github.com/hashicorp/terraform/tags
+ENV TF_VERSION=0.13.5
 
-# Install Unzip
-RUN apt-get install unzip
+# Updating apt-get with available packages and installing unzip
+RUN apt-get update && apt-get install unzip
 
 # Install Docker Engine using "convenience script" - Note: not for production
 # https://docs.docker.com/engine/install/ubuntu/#install-using-the-convenience-script
 # lastest versions of the Convenience Script will accept an environment variable called
 # "VERSION" for version control
-
-RUN VERSION="${DOCKER_VERSION}" && \
+RUN VERSION=${DOCKER_VERSION} && \
     curl -fsSL https://get.docker.com -o get-docker.sh && \
     sh get-docker.sh
+# TODO: quieten the output from get-docker.sh
 
 # When called via Jenkinsfile, make sure to pass the argument below to allow the agent (Docker-in-Docker) to
 # interact with the Docker daemon on the host Docker container.
@@ -34,7 +37,16 @@ RUN VERSION="${DOCKER_VERSION}" && \
 
 # Install AWS CLI
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html#x86
-RUN awscli_url=https://awscli.amazonaws.com/awscli-exe-linux-x86_64 && \
-    curl $awscli_url-${AWSCLI_VERSION}.zip -o "awscliv2.zip" && \
+# Left the curl args verbose deliberately to illustrate truncated args above
+RUN curl --fail --silent --show-error --location https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWSCLI_VERSION}.zip --output "awscliv2.zip" && \
     unzip awscliv2.zip && \
-    ./aws/install
+    ./aws/install && \
+    rm awscliv2.zip
+# TODO: quieten the output from awscli install
+
+# Install Terraform
+# https://gist.github.com/kaikousa/1a951df681ad2f11b5b0b77180238c44
+RUN curl https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip -o terraform.zip && \
+    unzip terraform.zip && \
+    mv terraform /usr/bin && \
+    rm terraform.zip
