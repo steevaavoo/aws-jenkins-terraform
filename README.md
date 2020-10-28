@@ -11,7 +11,7 @@ Mapping my previous cloud experience with Azure to Amazon Web Services - terms w
   - [x] aws cli
   - [x] terraform
   - [x] docker cli
-  - [ ] kubectl
+  - [x] kubectl
   - [ ] helm
   - [x] pwsh
 - [ ] Create custom node.js "Hello World" Docker container and upload to AWS "container registry"
@@ -72,6 +72,7 @@ Source URLs included in Dockerfile in each case.
     ENV DOCKER_VERSION=19.03.13
     ENV AWSCLI_VERSION=2.0.59
     ENV TF_VERSION=0.13.5
+    ENV K8S_VERSION=1.19.0
 
     RUN VERSION=${DOCKER_VERSION} && \
     curl -fsSL https://get.docker.com -o get-docker.sh && \
@@ -139,8 +140,16 @@ Source URLs included in Dockerfile in each case.
         rm terraform.zip
         ```
 
+    1. Added kubectl:
+
+        ```bash
+        RUN curl -fsSLO https://storage.googleapis.com/kubernetes-release/release/v${K8S_VERSION}/bin/linux/amd64/kubectl && \
+        chmod +x ./kubectl && \
+        mv ./kubectl /usr/local/bin/kubectl
+        ```
+
 To Do and Note:
 
-- [ ] Tidy up AWSCLI installation output (/dev/null?)
+- [ ] Tidy up AWSCLI and Docker installation output (/dev/null?)
 - [ ] Add remaining plug-ins
 - [ ] Push to container registry

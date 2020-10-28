@@ -14,10 +14,13 @@ ENV DOCKER_VERSION=19.03.13
 # https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst
 ENV AWSCLI_VERSION=2.0.59
 
-# Terraform Versions list
-# Lastest build https://releases.hashicorp.com/terraform/0.13.5/terraform_0.13.5_linux_amd64.zip
+# Terraform Versions list:
 # https://github.com/hashicorp/terraform/tags
 ENV TF_VERSION=0.13.5
+
+# K8s Version List
+# https://kubernetes.io/docs/tasks/tools/install-kubectl/
+ENV K8S_VERSION=1.19.0
 
 # Updating apt-get with available packages and installing unzip
 RUN apt-get update && apt-get install unzip
@@ -50,3 +53,9 @@ RUN curl https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_V
     unzip terraform.zip && \
     mv terraform /usr/bin && \
     rm terraform.zip
+
+# Install Kubectl
+# https://kubernetes.io/docs/tasks/tools/install-kubectl/
+RUN curl -fsSLO https://storage.googleapis.com/kubernetes-release/release/v${K8S_VERSION}/bin/linux/amd64/kubectl && \
+    chmod +x ./kubectl && \
+    mv ./kubectl /usr/local/bin/kubectl
