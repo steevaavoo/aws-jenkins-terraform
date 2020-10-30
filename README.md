@@ -7,12 +7,12 @@ Mapping my previous cloud experience with Azure to Amazon Web Services - terms w
 ## Goals
 
 - [x] Install Docker Desktop to run local Jenkins container
-- [ ] Create custom Jenkins Docker Agent image with all necessary tools for this pipeline
+- [x] Create custom Jenkins Docker Agent image with all necessary tools for this pipeline
   - [x] aws cli
   - [x] terraform
   - [x] docker cli
   - [x] kubectl
-  - [ ] helm
+  - [x] helm
   - [x] pwsh
 - [ ] Create custom node.js "Hello World" Docker container and upload to AWS "container registry"
 - [ ] Deploy custom container in K8s
@@ -73,6 +73,7 @@ Source URLs included in Dockerfile in each case.
     ENV AWSCLI_VERSION=2.0.59
     ENV TF_VERSION=0.13.5
     ENV K8S_VERSION=1.19.0
+    ENV HELM_VERSION=3.4.0
 
     RUN VERSION=${DOCKER_VERSION} && \
     curl -fsSL https://get.docker.com -o get-docker.sh && \
@@ -117,7 +118,7 @@ Source URLs included in Dockerfile in each case.
 
         ```bash
         RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWSCLI_VERSION}.zip" -o "awscliv2.zip" && \
-        unzip awscliv2.zip && \
+        unzip -q awscliv2.zip && \
         ./aws/install
         ```
 
@@ -135,12 +136,12 @@ Source URLs included in Dockerfile in each case.
 
         ```bash
         RUN curl https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip -o terraform.zip && \
-        unzip terraform.zip && \
+        unzip -q terraform.zip && \
         mv terraform /usr/bin && \
         rm terraform.zip
         ```
 
-    1. Added kubectl:
+   1. Added kubectl:
 
         ```bash
         RUN curl -fsSLO https://storage.googleapis.com/kubernetes-release/release/v${K8S_VERSION}/bin/linux/amd64/kubectl && \
@@ -148,8 +149,10 @@ Source URLs included in Dockerfile in each case.
         mv ./kubectl /usr/local/bin/kubectl
         ```
 
-To Do and Note:
+   1. Finally added Helm:
 
-- [ ] Tidy up AWSCLI and Docker installation output (/dev/null?)
-- [ ] Add remaining plug-ins
-- [ ] Push to container registry
+        ```bash
+        RUN curl -fsSL https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz -o helm.tar.gz && \
+        tar -zxf helm.tar.gz && \
+        mv linux-amd64/helm /usr/local/bin/helm
+        ```
