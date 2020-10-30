@@ -26,6 +26,9 @@ Mapping my previous cloud experience with Azure to Amazon Web Services - terms w
 
     ```powershell
     # https://hub.docker.com/r/jenkinsci/blueocean/
+    # This will create and run a Jenkins Blue Ocean container inside the Docker Desktop Hyper-V VM
+    # and store all permanent data (plugins etc.) on the Hyper-V VM in the jenkins-data folder, which is
+    # mapped to the /var/jenkins_home folder inside the Jenkins container.
     docker run `
         --rm -d `
         -u root `
