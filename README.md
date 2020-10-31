@@ -16,6 +16,8 @@ Mapping my previous cloud experience with Azure to Amazon Web Services - terms w
   - [x] pwsh
 - [x] Link Jenkins/Blueocean to GitHub Repo for CI
 - [x] Test Docker agent plugins with some arbitrary commands
+- [x] Test AWS cli login with get-caller-identity and withCredentials option
+- [ ] Test terraform init
 - [ ] Create custom node.js "Hello World" Docker container and upload to AWS "container registry"
 - [ ] Deploy custom container in K8s
 
@@ -188,3 +190,4 @@ http://localhost:8080/job/aws-jenkins-terraform/pipeline-syntax/
    1. Grab the ID to clipboard and paste where needed in Jenkinsfile under an Options block in withCredentials
       section
       1. Back to the old Syntax generator...
+      1. Added withCredentials block to pipeline

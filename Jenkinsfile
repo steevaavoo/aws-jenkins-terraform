@@ -9,14 +9,12 @@ pipeline {
   options {
     // taking AWS credential from Jenkins Global credential store and creates default environment variables
     // unless you specify otherwise.
-    // withCredentials([AmazonWebServicesCredentialsBinding(credentialsId: 'aws-credential')])
     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credential']])
     // colorising the console output for readability
     ansiColor('xterm')
     // timestamping console output for same reason
     timestamps()
   }
-
 
   stages {
     stage('init') {
@@ -34,10 +32,8 @@ pipeline {
           # aws configure
           aws sts get-caller-identity
         """
-
       }
     }
-
   }
 }
 
