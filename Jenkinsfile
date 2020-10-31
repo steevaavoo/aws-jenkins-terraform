@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('init') {
       steps {
-        sh label: "Showing Util Versions", """
+        sh label: "Showing Util Versions", script: """
           aws --version
           terraform version
           docker version
