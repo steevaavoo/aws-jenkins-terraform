@@ -6,6 +6,11 @@ pipeline {
     }
   }
 
+  environment {
+    AWS_DEFAULT_REGION = "us-west-2"
+  }
+
+
   options {
     // taking AWS credential from Jenkins Global credential store and creates default environment variables
     // unless you specify otherwise.
@@ -29,7 +34,6 @@ pipeline {
         """
 
         sh label: "Checking AWS Pipeline Credentials", script: """
-          # aws configure
           aws sts get-caller-identity
         """
 
