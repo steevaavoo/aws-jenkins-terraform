@@ -168,18 +168,23 @@ Source URLs included in Dockerfile in each case.
 
 #### Setting up a Pipeline in Jenkins
 
-   1. Navigate to http://localhost:8080/blue/organizations/jenkins/pipelines
-   1. Click Create a new pipeline
-   1. Choose GitHub
-   1. Get and provide the Access Token
-      1. https://github.com/settings/tokens/new?scopes=repo,read:user,user:email,write:repo_hook
-   1. Follow wizard. Choose appropriate repo
-   1. Choose docker from Agent drop-down, then provide name and tag of your Docker agent image
-   1. Add the -v /var/run/docker.sock:/var/run/docker.sock to the args box
-   1. Add a stage and a simple step - just to get a bare Jenkins file created
-   1. Save and run with an appropriate commit message (it will almost certainly fail - don't worry)
-   1. Sync changes in repo to get Jenkinsfile locally for manipulation
+1. Navigate to http://localhost:8080/blue/organizations/jenkins/pipelines
+1. Click Create a new pipeline
+1. Choose GitHub
+1. Get and provide the Access Token
+   1. https://github.com/settings/tokens/new?scopes=repo,read:user,user:email,write:repo_hook
+1. Follow wizard. Choose appropriate repo
+1. Choose docker from Agent drop-down, then provide name and tag of your Docker agent image
+1. Add the -v /var/run/docker.sock:/var/run/docker.sock to the args box
+1. Add a stage and a simple step - just to get a bare Jenkins file created
+1. Save and run with an appropriate commit message (it will almost certainly fail - don't worry)
+1. Sync changes in repo to get Jenkinsfile locally for manipulation
 
 When building the Jenkins file, make sure to make good use of Snippet Generator:
 http://localhost:8080/job/aws-jenkins-terraform/pipeline-syntax/
 
+1. Save AWS Access Key Pair in Jenkins via Credential Manager (global scope)
+   1. http://localhost:8080/credentials/store/system/domain/_/
+   1. Grab the ID to clipboard and paste where needed in Jenkinsfile under an Options block in withCredentials
+      section
+      1. Back to the old Syntax generator...

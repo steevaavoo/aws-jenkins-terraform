@@ -4,8 +4,21 @@ pipeline {
       args '-v /var/run/docker.sock:/var/run/docker.sock'
       image 'steevaavoo/pwshjenkinsagent:2020-10-30'
     }
-
   }
+
+  options {
+    withCredentials([
+      // taking AWS credential from Jenkins Global credential store and creates default environment variables
+      // unless you specify otherwise.
+      AmazonWebServicesCredentialsBinding(credentialsId: 'aws-credential')
+    ])
+    // colorising the console output for readability
+    ansiColor('xterm')
+    // timestamping console output for same reason
+    timestamps()
+  }
+
+
   stages {
     stage('init') {
       steps {
@@ -17,8 +30,16 @@ pipeline {
           helm version
           pwsh --version
         """
+
+        sh label: "Checking AWS Pipeline Credentials", script: """
+          # aws configure
+          aws sts get-caller-identity
+        """
+
       }
     }
 
   }
 }
+
+
