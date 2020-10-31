@@ -7,7 +7,10 @@ pipeline {
   }
 
   environment {
+    // Needed to create this because AWS expects a region to be defined globally
     AWS_DEFAULT_REGION = "us-west-2"
+    PREFIX = "steevaavoo"
+    TERRAFORM_BUCKET_NAME = "${PREFIX}-tfstate"
   }
 
 
@@ -38,7 +41,7 @@ pipeline {
         """
 
         sh label: "Creating S3 Bucket for tfstate", script: """
-          aws s3 mb s3://tfstate
+          aws s3 mb s3://${TERRAFORM_BUCKET_NAME}
         """
       }
     }
