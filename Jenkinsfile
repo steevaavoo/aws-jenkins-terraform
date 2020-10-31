@@ -7,11 +7,11 @@ pipeline {
   }
 
   options {
-    withCredentials([
       // taking AWS credential from Jenkins Global credential store and creates default environment variables
       // unless you specify otherwise.
+    withCredentials([[
       $class:'AmazonWebServicesCredentialsBinding'(credentialsId: 'aws-credential')
-    ])
+    ]])
     // colorising the console output for readability
     ansiColor('xterm')
     // timestamping console output for same reason
