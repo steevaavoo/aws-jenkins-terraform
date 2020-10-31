@@ -32,6 +32,10 @@ pipeline {
           # aws configure
           aws sts get-caller-identity
         """
+
+        sh label: "Creating S3 Bucket for tfstate", script: """
+          aws s3 mb s3://tfstate
+        """
       }
     }
   }

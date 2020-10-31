@@ -17,6 +17,9 @@ Mapping my previous cloud experience with Azure to Amazon Web Services - terms w
 - [x] Link Jenkins/Blueocean to GitHub Repo for CI
 - [x] Test Docker agent plugins with some arbitrary commands
 - [x] Test AWS cli login with get-caller-identity and withCredentials option
+- [ ] Create backend S3 storage on AWS for tfstate
+  - [ ] Create S3 bucket with cli
+  - [ ] Instruct terraform to create tfstate in bucket
 - [ ] Test terraform init
 - [ ] Create custom node.js "Hello World" Docker container and upload to AWS "container registry"
 - [ ] Deploy custom container in K8s
