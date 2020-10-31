@@ -7,9 +7,17 @@ pipeline {
 
   }
   stages {
-    stage('build') {
+    stage('init') {
       steps {
-        echo 'Hello World'
+        echo 'Showing Util Versions'
+        sh """
+          aws --version
+          terraform version
+          docker version
+          kubectl version --client
+          helm version
+          pwsh --version
+        """
       }
     }
 

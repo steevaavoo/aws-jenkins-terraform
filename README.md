@@ -14,7 +14,8 @@ Mapping my previous cloud experience with Azure to Amazon Web Services - terms w
   - [x] kubectl
   - [x] helm
   - [x] pwsh
-- [ ] Link Jenkins/Blueocean to GitHub Repo for CI
+- [x] Link Jenkins/Blueocean to GitHub Repo for CI
+- [x] Test Docker agent plugins with some arbitrary commands
 - [ ] Create custom node.js "Hello World" Docker container and upload to AWS "container registry"
 - [ ] Deploy custom container in K8s
 
