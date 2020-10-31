@@ -41,8 +41,8 @@ pipeline {
         """
 
         sh label: "Creating S3 Bucket for tfstate", script: """
-          // TODO: do this more gracefully at some point
-          aws s3 mb s3://${TERRAFORM_BUCKET_NAME} || true
+          // TODO: make this idempotent and reintegrate
+          // aws s3 mb s3://${TERRAFORM_BUCKET_NAME} || true
         """
 
         sh label: "Terraform init", script: """
