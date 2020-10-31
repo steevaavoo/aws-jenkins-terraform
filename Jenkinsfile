@@ -43,9 +43,13 @@ pipeline {
         sh label: "Creating S3 Bucket for tfstate", script: """
           aws s3 mb s3://${TERRAFORM_BUCKET_NAME}
         """
+
+        sh label: "Terraform init", script: """
+          terraform init \
+          -backend-config="bucket=${TERRAFORM_BUCKET_NAME}" \
+          -backend-config="region=${AWS_DEFAULT_REGION}"
+        """
       }
     }
   }
 }
-
-
