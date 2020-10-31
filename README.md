@@ -177,3 +177,4 @@ Source URLs included in Dockerfile in each case.
    1. Add the -v /var/run/docker.sock:/var/run/docker.sock to the args box
    1. Add a stage and a simple step - just to get a bare Jenkins file created
    1. Save and run with an appropriate commit message (it will almost certainly fail - don't worry)
+   1. Sync changes in repo to get Jenkinsfile locally for manipulation

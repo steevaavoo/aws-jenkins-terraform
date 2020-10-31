@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       args '-v /var/run/docker.sock:/var/run/docker.sock'
-      image 'pwshjenkinsagent:2020-10-30'
+      image 'steevaavoo/pwshjenkinsagent:2020-10-30'
     }
 
   }
