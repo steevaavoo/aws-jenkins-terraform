@@ -14,6 +14,7 @@ Mapping my previous cloud experience with Azure to Amazon Web Services - terms w
   - [x] kubectl
   - [x] helm
   - [x] pwsh
+- [ ] Link Jenkins/Blueocean to GitHub Repo for CI
 - [ ] Create custom node.js "Hello World" Docker container and upload to AWS "container registry"
 - [ ] Deploy custom container in K8s
 
@@ -29,6 +30,8 @@ Mapping my previous cloud experience with Azure to Amazon Web Services - terms w
     # This will create and run a Jenkins Blue Ocean container inside the Docker Desktop Hyper-V VM
     # and store all permanent data (plugins etc.) on the Hyper-V VM in the jenkins-data folder, which is
     # mapped to the /var/jenkins_home folder inside the Jenkins container.
+    # Use this every time to spawn an instance of the Jenkins/Blueocean container which is ephemeral, 
+    # but refers to the state on the Host Docker VM.
     docker run `
         --rm -d `
         -u root `
@@ -159,3 +162,18 @@ Source URLs included in Dockerfile in each case.
         tar -zxf helm.tar.gz && \
         mv linux-amd64/helm /usr/local/bin/helm
         ```
+
+### Building the Pipeline
+
+#### Setting up a Pipeline in Jenkins
+
+   1. Navigate to http://localhost:8080/blue/organizations/jenkins/pipelines
+   1. Click Create a new pipeline
+   1. Choose GitHub
+   1. Get and provide the Access Token
+      1. https://github.com/settings/tokens/new?scopes=repo,read:user,user:email,write:repo_hook
+   1. Follow wizard. Choose appropriate repo
+   1. Choose docker from Agent drop-down, then provide name and tag of your Docker agent image
+   1. Add the -v /var/run/docker.sock:/var/run/docker.sock to the args box
+   1. Add a stage and a simple step - just to get a bare Jenkins file created
+   1. Save and run with an appropriate commit message (it will almost certainly fail - don't worry)
