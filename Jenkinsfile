@@ -45,7 +45,7 @@ pipeline {
         sh label: "Creating S3 Bucket for tfstate", script: """
           # TODO: make this idempotent
           # || true is bash equivalent of PowerShells "silentlycontinue"
-          aws s3 mb s3://${TERRAFORM_BUCKET_NAME} || true
+          aws s3 mb s3://${TF_VAR_TERRAFORM_BUCKET_NAME} || true
         """
 
         sh label: "Terraform init", script: """
