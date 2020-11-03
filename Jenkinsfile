@@ -8,15 +8,17 @@ pipeline {
 
   environment {
     // Needed to create this because AWS expects a region to be defined globally
-    AWS_DEFAULT_REGION = "us-west-2"
+    // https://www.terraform.io/docs/commands/environment-variables.html
     PREFIX = "steevaavoo"
-    TERRAFORM_BUCKET_NAME = "${PREFIX}-tfstate"
+    TF_VAR_AWS_DEFAULT_REGION = "us-west-2"
+    TF_VAR_TERRAFORM_BUCKET_NAME = "${PREFIX}-tfstate"
   }
 
 
   options {
-    // taking AWS credential from Jenkins Global credential store and creates default environment variables
-    // unless you specify otherwise.
+    // taking AWS credential from Jenkins Global credential store; creates default environment variables
+    // unless you specify otherwise. http://localhost:8080/credentials/store/system/domain/_/
+    // Syntax generator: http://localhost:8080/job/aws-jenkins-terraform/pipeline-syntax/
     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credential']])
     // colorising the console output for readability
     ansiColor('xterm')
@@ -41,15 +43,16 @@ pipeline {
         """
 
         sh label: "Creating S3 Bucket for tfstate", script: """
-          # TODO: make this idempotent and reintegrate
+          # TODO: make this idempotent
+          # || true is bash equivalent of PowerShells "silentlycontinue"
           aws s3 mb s3://${TERRAFORM_BUCKET_NAME} || true
         """
 
         sh label: "Terraform init", script: """
           terraform init \
           # passing in Jenkins environment variables to Terraform
-          -backend-config="bucket=${TERRAFORM_BUCKET_NAME}" \
-          -backend-config="region=${AWS_DEFAULT_REGION}"
+          # -backend-config="bucket=${TERRAFORM_BUCKET_NAME}" \
+          # -backend-config="region=${AWS_DEFAULT_REGION}"
         """
       }
     }
