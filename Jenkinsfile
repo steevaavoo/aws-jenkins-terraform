@@ -9,6 +9,9 @@ pipeline {
   environment {
     // Needed to create this because AWS expects a region to be defined globally
     // https://www.terraform.io/docs/commands/environment-variables.html
+    // if we want to pass env vars to Terraform, prefix them with TF_VAR_<VARIABLE_NAME>
+    // then declare them in variables.tf and reference them as var.<VARIABLE_NAME> (without
+    // the TF_VAR_ prefix) in the relevant sections of .tf files
     PREFIX = "steevaavoo"
     DEFAULT_REGION = "us-west-2"
     TERRAFORM_BUCKET_NAME = "${PREFIX}-tfstate"
@@ -52,16 +55,21 @@ pipeline {
         """
 
         sh label: "Terraform init", script: """
-          # TODO: try passing env vars to -backend-config via cli since they don't work in providers.tf
+          # Passing env vars via -backend-config args since they don't work when called
+          # referenced inside the providers.tf file
           # https://github.com/hashicorp/terraform/issues/13022
           cd ./terraform
           terraform init -backend-config="bucket=${TERRAFORM_BUCKET_NAME}" \
                          -backend-config="region=${DEFAULT_REGION}"
+          cd ..
         """
-
-        sh label: "Terraform plan", script: """
+      }
+    stage('build') {
+      steps {
+        sh label: "Terraform apply", script: """
           cd ./terraform
-          terraform plan
+          terraform apply -auto-approve
+          cd ..
         """
       }
     }
