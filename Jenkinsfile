@@ -50,10 +50,10 @@ pipeline {
 
         sh label: "Terraform init", script: """
           terraform init \
-          # passing in Jenkins environment variables to Terraform
-          # -backend-config="bucket=${TERRAFORM_BUCKET_NAME}" \
-          # -backend-config="region=${AWS_DEFAULT_REGION}"
         """
+          // # passing in Jenkins environment variables to Terraform
+          // # -backend-config="bucket=${TERRAFORM_BUCKET_NAME}" \
+          // # -backend-config="region=${AWS_DEFAULT_REGION}"
       }
     }
   }
