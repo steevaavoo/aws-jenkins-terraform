@@ -65,6 +65,7 @@ pipeline {
         """
       }
     }
+    // TODO: Add conditional build/destroy switch
     stage('build') {
       steps {
         sh label: "Terraform apply", script: """
