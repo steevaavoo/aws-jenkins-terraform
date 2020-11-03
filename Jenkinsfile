@@ -53,6 +53,10 @@ pipeline {
         sh label: "Terraform init", script: """
           terraform init \
         """
+
+        sh label: "Terraform plan", script: """
+          terraform plan \
+        """
       }
     }
   }
