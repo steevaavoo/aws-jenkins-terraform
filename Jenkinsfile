@@ -51,11 +51,13 @@ pipeline {
         """
 
         sh label: "Terraform init", script: """
-          terraform init \
+          cd ./terraform
+          terraform init
         """
 
         sh label: "Terraform plan", script: """
-          terraform plan \
+          cd ./terraform
+          terraform plan
         """
       }
     }
