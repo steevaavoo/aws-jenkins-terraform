@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
-    bucket = var.TERRAFORM_BUCKET_NAME
+    bucket = "steevaavoo-tfstate"
     key    = "tfstate"
-    region = var.AWS_DEFAULT_REGION
+    region = "us-west-2"
   }
 }
