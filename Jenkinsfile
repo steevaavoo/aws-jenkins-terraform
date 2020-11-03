@@ -47,12 +47,16 @@ pipeline {
         sh label: "Creating S3 Bucket for tfstate", script: """
           # TODO: make this idempotent
           # || true is bash equivalent of PowerShells "silentlycontinue"
+          # bit of a dirty workaround for now - check the cli docs for better options
           aws s3 mb s3://${TERRAFORM_BUCKET_NAME} --region ${DEFAULT_REGION} || true
         """
 
         sh label: "Terraform init", script: """
+          # TODO: try passing env vars to -backend-config via cli since they don't work in providers.tf
+          # https://github.com/hashicorp/terraform/issues/13022
           cd ./terraform
-          terraform init
+          terraform init -backend-config="bucket=${TERRAFORM_BUCKET_NAME}" \
+                         -backend-config="region=${DEFAULT_REGION}"
         """
 
         sh label: "Terraform plan", script: """
