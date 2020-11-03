@@ -64,6 +64,7 @@ pipeline {
           cd ..
         """
       }
+    }
     stage('build') {
       steps {
         sh label: "Terraform apply", script: """
