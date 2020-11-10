@@ -32,7 +32,7 @@ pipeline {
   }
 
   parameters {
-        booleanParam(name: "Destroy", defaultValue: false)
+        booleanParam(name: "TERRAFORM_DESTROY", defaultValue: false, description: 'Run Terraform Destroy (true) or Apply (false).')
   }
 
   stages {
@@ -70,17 +70,29 @@ pipeline {
 
         sh label: "Terraform plan", script: """
           cd ./terraform
-          terraform plan
+          terraform plan -out=tfplan
           cd ..
         """
       }
     }
     // TODO: Add conditional build/destroy switch
     stage('build') {
+      when { expression { !params.TERRAFORM_DESTROY } }
       steps {
         sh label: "Terraform apply", script: """
           cd ./terraform
-          terraform apply -auto-approve
+          terraform apply tfplan -auto-approve
+          cd ..
+        """
+      }
+    }
+
+    stage('destroy') {
+      when { expression { params.TERRAFORM_DESTROY } }
+      steps {
+        sh label: "Terraform destroy", script: """
+          cd ./terraform
+          terraform destroy -auto-approve
           cd ..
         """
       }
