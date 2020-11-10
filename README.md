@@ -20,7 +20,9 @@ Mapping my previous cloud experience with Azure to Amazon Web Services - terms w
 - [x] Create backend S3 storage on AWS for tfstate
   - [x] Create S3 bucket with cli
   - [x] Instruct terraform to create tfstate in bucket
-- [ ] Test terraform init state storage
+- [x] Test terraform init state storage
+- [ ] Test terraform plan
+- [ ] Build/Destroy based on interactive pipeline parameter
 - [ ] Create custom node.js "Hello World" Docker container and upload to AWS "container registry"
 - [ ] Deploy custom container in K8s
 
