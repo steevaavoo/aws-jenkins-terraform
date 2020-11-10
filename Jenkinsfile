@@ -32,7 +32,12 @@ pipeline {
   }
 
   parameters {
+        // Prompts for input when starting build. Referenced later to decide whether to run terraform
+        // build or terraform destroy
+        // NOTE - run from http://localhost:8080/blue/organizations/jenkins/aws-jenkins-terraform/branches
+        // to see parameter prompts.
         booleanParam(name: "TERRAFORM_DESTROY", defaultValue: false, description: 'Run Terraform Destroy (true) or Apply (false).')
+        booleanParam(name: "AWS_STORAGE_DESTROY", defaultValue: false, description: 'Destroy AWS S3 Tfstate storage? Yes (true) No (false)')
   }
 
   stages {
@@ -75,7 +80,7 @@ pipeline {
         """
       }
     }
-    // TODO: Add conditional build/destroy switch
+
     stage('build') {
       when { expression { !params.TERRAFORM_DESTROY } }
       steps {
@@ -94,6 +99,15 @@ pipeline {
           cd ./terraform
           terraform destroy -auto-approve
           cd ..
+        """
+      }
+    }
+
+    stage('destroy-storage') {
+      when { expression { params.AWS_STORAGE_DESTROY } }
+      steps {
+        sh label: "Deleting S3 Bucket for tfstate", script: """
+          aws s3 rb s3://${TERRAFORM_BUCKET_NAME} --region ${DEFAULT_REGION} --force
         """
       }
     }
