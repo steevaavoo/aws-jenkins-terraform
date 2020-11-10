@@ -81,7 +81,7 @@ pipeline {
       steps {
         sh label: "Terraform apply", script: """
           cd ./terraform
-          terraform apply tfplan -auto-approve
+          terraform apply -auto-approve tfplan
           cd ..
         """
       }
