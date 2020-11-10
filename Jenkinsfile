@@ -31,6 +31,10 @@ pipeline {
     timestamps()
   }
 
+  parameters {
+        booleanParam(name: "Destroy", defaultValue: false)
+  }
+
   stages {
     stage('init') {
       steps {
@@ -61,6 +65,12 @@ pipeline {
           cd ./terraform
           terraform init -backend-config="bucket=${TERRAFORM_BUCKET_NAME}" \
                          -backend-config="region=${DEFAULT_REGION}"
+          cd ..
+        """
+
+        sh label: "Terraform plan", script: """
+          cd ./terraform
+          terraform plan
           cd ..
         """
       }
