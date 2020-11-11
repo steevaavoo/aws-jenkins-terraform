@@ -56,11 +56,12 @@ pipeline {
           aws sts get-caller-identity
         """
 
+// # ORIGINAL: bucket_exists=`aws s3api list-buckets --query 'Buckets[?starts_with(Name, \`"'${TERRAFORM_BUCKET_NAME}'"\`) == \`true\`].Name' --output text`
+
         sh label: "Creating S3 Bucket for tfstate", script: """
           # Checking if my bucket already exists and adding result to variable
-          # This below original script needed to be run through the Jenkins Pipeline Syntax Generator to avoid
+          # The original script (see above) needed to be run through the Jenkins Pipeline Syntax Generator to avoid
           # throwing errors.
-          # ORIGINAL: bucket_exists=`aws s3api list-buckets --query 'Buckets[?starts_with(Name, \`"'${TERRAFORM_BUCKET_NAME}'"\`) == \`true\`].Name' --output text`
           bucket_exists=`aws s3api list-buckets --query \'Buckets[?starts_with(Name, \\`"\'${TERRAFORM_BUCKET_NAME}\'"\\`) == \\`true\\`].Name\' --output text`
           # Evaluating variable and creating a bucket if empty
           if [[ $bucket_exists ]]; then
