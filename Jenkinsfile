@@ -57,11 +57,15 @@ pipeline {
         """
 
         sh label: "Creating S3 Bucket for tfstate", script: """
-          # TODO: make this idempotent
-          # TODO: bucket_exists=`aws s3api list-buckets --query 'Buckets[?starts_with(Name, \`"'$bucket_name'"\`) == \`true\`].Name' --output text`
-          # Build an if/fi around the above
-          # || true is bash equivalent of PowerShells "silentlycontinue"
-          aws s3 mb s3://${TERRAFORM_BUCKET_NAME} --region ${DEFAULT_REGION} || true
+          # Checking if my bucket already exists and adding result to variable
+          bucket_exists=`aws s3api list-buckets --query 'Buckets[?starts_with(Name, \`"'${TERRAFORM_BUCKET_NAME}'"\`) == \`true\`].Name' --output text`
+          # Evaluating variable and creating a bucket if empty
+          if [[ $bucket_exists ]]; then
+            echo "Bucket exists, moving on."
+          else
+            echo "Bucket does not exist, creating..."
+            aws s3 mb s3://${TERRAFORM_BUCKET_NAME} --region ${DEFAULT_REGION}
+          fi
         """
 
         sh label: "Terraform init", script: """
