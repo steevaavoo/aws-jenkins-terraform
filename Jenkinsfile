@@ -17,7 +17,6 @@ pipeline {
     TERRAFORM_BUCKET_NAME = "${PREFIX}-tfstate"
     TF_VAR_AWS_DEFAULT_REGION = "${DEFAULT_REGION}"
     TF_VAR_TERRAFORM_BUCKET_NAME = "${TERRAFORM_BUCKET_NAME}"
-    BUCKET_EXISTS = ""
   }
 
 
@@ -57,15 +56,15 @@ pipeline {
           aws sts get-caller-identity
         """
 
-// # ORIGINAL: bucket_exists=`aws s3api list-buckets --query 'Buckets[?starts_with(Name, \`"'${TERRAFORM_BUCKET_NAME}'"\`) == \`true\`].Name' --output text`
+        // # ORIGINAL: bucket_exists=`aws s3api list-buckets --query 'Buckets[?starts_with(Name, \`"'${TERRAFORM_BUCKET_NAME}'"\`) == \`true\`].Name' --output text`
 
         sh label: "Creating S3 Bucket for tfstate", script: """
           # Checking if my bucket already exists and adding result to variable
           # The original script (see above) needed to be run through the Jenkins Pipeline Syntax Generator to avoid
           # throwing errors.
-          $BUCKET_EXISTS=`aws s3api list-buckets --query \'Buckets[?starts_with(Name, \\`"\'${TERRAFORM_BUCKET_NAME}\'"\\`) == \\`true\\`].Name\' --output text`
+          BUCKET_EXISTS=`aws s3api list-buckets --query \'Buckets[?starts_with(Name, \\`"\'${TERRAFORM_BUCKET_NAME}\'"\\`) == \\`true\\`].Name\' --output text`
           # Evaluating variable and creating a bucket if empty
-          if [[ ${BUCKET_EXISTS} ]]; then
+          if [[ \$BUCKET_EXISTS ]]; then
             echo "Bucket exists, moving on."
           else
             echo "Bucket does not exist, creating..."
