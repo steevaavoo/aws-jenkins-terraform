@@ -56,6 +56,10 @@ pipeline {
           aws sts get-caller-identity
         """
 
+        sh label: "Setting permissions on Scripts folder", script: """
+          chmod -R +x ./scripts/
+        """
+
         sh label: "Creating S3 Bucket for tfstate", script: './scripts/Create-AWS-Storage.sh'
 
         sh label: "Terraform init", script: """
