@@ -64,7 +64,7 @@ pipeline {
           # throwing errors.
           BUCKET_EXISTS=`aws s3api list-buckets --query \'Buckets[?starts_with(Name, \\`"\'${TERRAFORM_BUCKET_NAME}\'"\\`) == \\`true\\`].Name\' --output text`
           # Evaluating variable and creating a bucket if empty
-          if [[ \$BUCKET_EXISTS ]]; then
+          if [ -n \$BUCKET_EXISTS ]; then
             echo "Bucket exists, moving on."
           else
             echo "Bucket does not exist, creating..."
