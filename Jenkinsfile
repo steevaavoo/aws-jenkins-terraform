@@ -56,6 +56,8 @@ pipeline {
           aws sts get-caller-identity
         """
 
+        // Thanks to Adam Rush for this fix to Error 126 when calling scripts
+        // https://github.com/adamrushuk/aks-nexus-velero/blob/develop/.github/workflows/build.yml#L91
         sh label: "Setting permissions on Scripts folder", script: """
           chmod -R +x ./scripts/
         """
