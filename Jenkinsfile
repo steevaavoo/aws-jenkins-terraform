@@ -58,8 +58,9 @@ pipeline {
 
         sh label: "Creating S3 Bucket for tfstate", script: """
           # TODO: make this idempotent
+          # TODO: bucket_exists=`aws s3api list-buckets --query 'Buckets[?starts_with(Name, \`"'$bucket_name'"\`) == \`true\`].Name' --output text`
+          # Build an if/fi around the above
           # || true is bash equivalent of PowerShells "silentlycontinue"
-          # bit of a dirty workaround for now - check the cli docs for better options
           aws s3 mb s3://${TERRAFORM_BUCKET_NAME} --region ${DEFAULT_REGION} || true
         """
 
