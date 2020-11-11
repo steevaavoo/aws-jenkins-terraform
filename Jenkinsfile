@@ -56,24 +56,7 @@ pipeline {
           aws sts get-caller-identity
         """
 
-        // # ORIGINAL: bucket_exists=`aws s3api list-buckets --query 'Buckets[?starts_with(Name, \`"'${TERRAFORM_BUCKET_NAME}'"\`) == \`true\`].Name' --output text`
-
-        sh label: "Creating S3 Bucket for tfstate", script: """
-          # Checking if my bucket already exists and adding result to variable
-          # The original script (see above) needed to be run through the Jenkins Pipeline Syntax Generator to avoid
-          # throwing errors.
-          BUCKET_EXISTS=`aws s3api list-buckets --query \'Buckets[?starts_with(Name, \\`"\'${TERRAFORM_BUCKET_NAME}\'"\\`) == \\`true\\`].Name\' --output text`
-          # Evaluating variable and creating a bucket if empty -n denotes non-empty and the escape character is
-          # needed to prevent Jenkins from trying to evaluate the variable during pipeline checks
-          if [[ -n "\$BUCKET_EXISTS" ]]; then
-            echo "\$BUCKET_EXISTS"
-            echo "Bucket exists, moving on."
-          else
-            echo "\$BUCKET_EXISTS"
-            echo "Bucket does not exist, creating..."
-            aws s3 mb s3://${TERRAFORM_BUCKET_NAME} --region ${DEFAULT_REGION}
-          fi
-        """
+        sh label: "Creating S3 Bucket for tfstate", script: './scripts/Create-AWS-Storage.sh'
 
         sh label: "Terraform init", script: """
           # Passing env vars via -backend-config args since they don't work when called
