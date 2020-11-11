@@ -74,17 +74,17 @@ pipeline {
           cd ..
         """
 
-        sh label: "Terraform plan", script: """
-          cd ./terraform
-          terraform plan -out=tfplan
-          cd ..
-        """
       }
     }
 
     stage('build') {
       when { expression { !params.TERRAFORM_DESTROY } }
       steps {
+        sh label: "Terraform plan", script: """
+          cd ./terraform
+          terraform plan -out=tfplan
+          cd ..
+        """
         sh label: "Terraform apply", script: """
           cd ./terraform
           terraform apply -auto-approve tfplan
