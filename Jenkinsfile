@@ -63,8 +63,8 @@ pipeline {
           # The original script (see above) needed to be run through the Jenkins Pipeline Syntax Generator to avoid
           # throwing errors.
           BUCKET_EXISTS=`aws s3api list-buckets --query \'Buckets[?starts_with(Name, \\`"\'${TERRAFORM_BUCKET_NAME}\'"\\`) == \\`true\\`].Name\' --output text`
-          # Evaluating variable and creating a bucket if empty (-n denotes non-empty and the \ escape character is
-          # needed to prevent Jenkins from trying to evaluate the variable during pipeline checks)
+          # Evaluating variable and creating a bucket if empty -n denotes non-empty and the escape character is
+          # needed to prevent Jenkins from trying to evaluate the variable during pipeline checks
           if [[ -n "\$BUCKET_EXISTS" ]]; then
             echo "\$BUCKET_EXISTS"
             echo "Bucket exists, moving on."
