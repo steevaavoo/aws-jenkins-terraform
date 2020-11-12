@@ -43,36 +43,19 @@ pipeline {
   stages {
     stage('init') {
       steps {
-        sh label: "Showing Util Versions", script: """
-          aws --version
-          terraform version
-          docker version
-          kubectl version --client
-          helm version
-          pwsh --version
-        """
-
-        sh label: "Checking AWS Pipeline Credentials", script: """
-          aws sts get-caller-identity
-        """
-
         // Thanks to Adam Rush for this fix to Error 126 when calling scripts
         // https://github.com/adamrushuk/aks-nexus-velero/blob/develop/.github/workflows/build.yml#L91
         sh label: "Setting permissions on Scripts folder", script: """
           chmod -R +x ./scripts/
         """
 
+        sh label: "Showing Util Versions", script: './scripts/Show-Util-Versions.sh'
+
+        sh label: "Checking AWS Pipeline Credentials", script: './scripts/Check-AWS-Credentials.sh'
+
         sh label: "Creating S3 Bucket for tfstate", script: './scripts/Create-AWS-Storage.sh'
 
-        sh label: "Terraform init", script: """
-          # Passing env vars via -backend-config args since they don't work when called
-          # referenced inside the providers.tf file
-          # https://github.com/hashicorp/terraform/issues/13022
-          cd ./terraform
-          terraform init -backend-config="bucket=${TERRAFORM_BUCKET_NAME}" \
-                         -backend-config="region=${DEFAULT_REGION}"
-          cd ..
-        """
+        sh label: "Terraform init", script: './scripts/Terraform-Init.sh'
 
       }
     }
@@ -80,36 +63,24 @@ pipeline {
     stage('build') {
       when { expression { !params.TERRAFORM_DESTROY } }
       steps {
-        sh label: "Terraform plan", script: """
-          cd ./terraform
-          terraform plan -out=tfplan
-          cd ..
-        """
-        sh label: "Terraform apply", script: """
-          cd ./terraform
-          terraform apply -auto-approve tfplan
-          cd ..
-        """
+        sh label: "Terraform plan", script: './scripts/Terraform-Plan.sh'
+
+        sh label: "Terraform apply", script: './scripts/Terraform-Apply.sh'
+
       }
     }
 
     stage('destroy') {
       when { expression { params.TERRAFORM_DESTROY } }
       steps {
-        sh label: "Terraform destroy", script: """
-          cd ./terraform
-          terraform destroy -auto-approve
-          cd ..
-        """
+        sh label: "Terraform destroy", script: './scripts/Terraform-Destroy.sh'
       }
     }
 
     stage('destroy-storage') {
       when { expression { params.AWS_STORAGE_DESTROY } }
       steps {
-        sh label: "Deleting S3 Bucket for tfstate", script: """
-          aws s3 rb s3://${TERRAFORM_BUCKET_NAME} --region ${DEFAULT_REGION} --force
-        """
+        sh label: "Deleting S3 Bucket for tfstate", script: './scripts/Destroy-Storage.sh'
       }
     }
   }
