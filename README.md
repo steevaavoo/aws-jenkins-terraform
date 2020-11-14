@@ -26,7 +26,11 @@ Mapping my previous cloud experience with Azure to Amazon Web Services - terms w
 - [x] Build/Destroy S3 tfstate storage based on interactive pipeline parameter
 - [x] Make bucket creation idempotent
 - [x] Move scripts into individual scripts in dedicated folder
-- [ ] Create custom node.js "Hello World" Docker container and upload to AWS "container registry"
+- [ ] Create custom node.js "Hello World" Docker container and upload to AWS ECR
+  - [ ] Terraform an ECR
+  - [ ] Push a generic node.js container & test
+  - [ ] Customise node.js container
+  - [ ] Push custom container & test
 - [ ] Deploy custom container in K8s
 
 ## Getting Started
