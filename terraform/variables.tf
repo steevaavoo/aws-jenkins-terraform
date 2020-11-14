@@ -12,6 +12,6 @@ variable "TERRAFORM_BUCKET_NAME" {
   type = string
 }
 
-variable "container_registry_name" {
-    default = "ECR_NAME"
+variable "ECR_NAME" {
+  type = string
 }

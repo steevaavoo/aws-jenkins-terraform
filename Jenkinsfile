@@ -50,13 +50,13 @@ pipeline {
           chmod -R +x ./scripts/
         """
 
-        sh label: "Showing Util Versions", script: './scripts/Show-Util-Versions.sh'
+        sh label: "Showing Util Versions", script: './scripts/show_util_versions.sh'
 
-        sh label: "Checking AWS Pipeline Credentials", script: './scripts/Check-AWS-Credentials.sh'
+        sh label: "Checking AWS Pipeline Credentials", script: './scripts/check_aws_credentials.sh'
 
-        sh label: "Creating S3 Bucket for tfstate", script: './scripts/Create-AWS-Storage.sh'
+        sh label: "Creating S3 Bucket for tfstate", script: './scripts/create_aws_storage.sh'
 
-        sh label: "Terraform init", script: './scripts/Terraform-Init.sh'
+        sh label: "Terraform init", script: './scripts/terraform_init.sh'
 
       }
     }
@@ -64,9 +64,9 @@ pipeline {
     stage('build') {
       when { expression { !params.TERRAFORM_DESTROY } }
       steps {
-        sh label: "Terraform plan", script: './scripts/Terraform-Plan.sh'
+        sh label: "Terraform plan", script: './scripts/terraform_plan.sh'
 
-        sh label: "Terraform apply", script: './scripts/Terraform-Apply.sh'
+        sh label: "Terraform apply", script: './scripts/terraform_apply.sh'
 
       }
     }
@@ -74,14 +74,14 @@ pipeline {
     stage('destroy') {
       when { expression { params.TERRAFORM_DESTROY } }
       steps {
-        sh label: "Terraform destroy", script: './scripts/Terraform-Destroy.sh'
+        sh label: "Terraform destroy", script: './scripts/terraform_destroy.sh'
       }
     }
 
     stage('destroy-storage') {
       when { expression { params.AWS_STORAGE_DESTROY } }
       steps {
-        sh label: "Deleting S3 Bucket for tfstate", script: './scripts/Destroy-Storage.sh'
+        sh label: "Deleting S3 Bucket for tfstate", script: './scripts/destroy_storage.sh'
       }
     }
   }
