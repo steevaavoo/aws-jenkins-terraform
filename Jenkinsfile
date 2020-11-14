@@ -15,10 +15,10 @@ pipeline {
     PREFIX = "steevaavoo"
     DEFAULT_REGION = "us-west-2"
     TERRAFORM_BUCKET_NAME = "${PREFIX}-tfstate"
+    TF_VAR_PREFIX = "${PREFIX}"
     TF_VAR_AWS_DEFAULT_REGION = "${DEFAULT_REGION}"
     TF_VAR_TERRAFORM_BUCKET_NAME = "${TERRAFORM_BUCKET_NAME}"
   }
-
 
   options {
     // taking AWS credential from Jenkins Global credential store; creates default environment variables

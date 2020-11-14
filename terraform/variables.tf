@@ -3,9 +3,11 @@
 variable "AWS_DEFAULT_REGION" {
   type = string
 }
+
 variable "PREFIX" {
   type = string
 }
+
 variable "TERRAFORM_BUCKET_NAME" {
   type = string
 }
